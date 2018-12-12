@@ -35,7 +35,22 @@ class Autor
     
     public function get($id)
     {
-        //TODO
+        try
+		{
+			$result = array();                        
+            $stm = $this->conn->prepare("SELECT id_aut,nom_aut,fk_nacionalitat FROM AUTORS WHERE ID_AUT =:id");
+            $stm->bindValue(':id',$id);
+			$stm->execute();
+            $tuples=$stm->fetchAll();
+            $this->resposta->setDades($tuples);    // array de tuples
+			$this->resposta->setCorrecta(true);       // La resposta es correcta        
+            return $this->resposta;
+		}
+        catch(Exception $e)
+		{   // hi ha un error posam la resposta a fals i tornam missatge d'error
+			$this->resposta->setCorrecta(false, $e->getMessage());
+            return $this->resposta;
+		}
     }
 
     
@@ -71,9 +86,24 @@ class Autor
 		}
     }   
     
-    public function update($data)
+    public function update($data, $nou)
     {
-        // TODO
+        try
+		{
+			$result = array();                        
+            $stm = $this->conn->prepare("UPDATE AUTORS SET NOM_AUT =:data where ID_AUT =:nou");
+            $stm->bindValue(':nou',$nou);
+            $stm->bindValue(':data',$data);
+			$stm->execute();
+               // array de tuples
+			$this->resposta->setCorrecta(true);       // La resposta es correcta        
+            return $this->resposta;
+		}
+        catch(Exception $e)
+		{   // hi ha un error posam la resposta a fals i tornam missatge d'error
+			$this->resposta->setCorrecta(false, $e->getMessage());
+            return $this->resposta;
+		}
     }
 
     
